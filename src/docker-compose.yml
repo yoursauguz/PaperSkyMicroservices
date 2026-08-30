@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  catalog-database:
+    image: postgres:latest
+    restart: always
+    volumes:
+      - postgres_catalog:/var/lib/postgresql
+
+volumes:
+  postgres_catalog:

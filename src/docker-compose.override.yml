@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  catalog-database:
+    container_name: catalog-database
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=CatalogDb
+    ports:
+      - "5432:5432"
