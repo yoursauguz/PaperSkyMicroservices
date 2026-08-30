@@ -89,9 +89,10 @@ public async Task<IEnumerable<Book>> GetBooksByGenreAsync(IDocumentSession sessi
 }
 ```
 
-!image.png
+!<img width="239" height="262" alt="image" src="https://github.com/user-attachments/assets/07ba24fe-8424-435f-8652-8bdc49dbe416" />
 
-!image.png
+!<img width="259" height="266" alt="image" src="https://github.com/user-attachments/assets/47852d7d-c786-4182-96a7-2bcc816fa767" />
+
 
 # Technical Analysis
 
@@ -99,7 +100,7 @@ public async Task<IEnumerable<Book>> GetBooksByGenreAsync(IDocumentSession sessi
 
 To maximize maintainability, scalability, and code clarity within each microservice, the application strictly follows **Vertical Slice Architecture**.
 
-!image.png
+!<img width="720" height="508" alt="image" src="https://github.com/user-attachments/assets/242ae165-16b6-4d92-af66-22de6648fd73" />
 
 ### Core Architecture Concepts
 
@@ -202,15 +203,11 @@ It serializes the C# `Book` entities directly into PostgreSQL `JSONB` columns wh
 - **Expressive Validation Rules:** Enables the creation of strongly-typed, chainable validation logic for incoming commands and requests.
 - **Pipeline Integration:** Validates incoming payloads before execution reaches the core handlers, ensuring invalid data is rejected early with clear error responses.
 
-!image.png
-
-!image.png
-
-!image.png
-
-!image.png
-
-!image.png
+!<img width="242" height="213" alt="image" src="https://github.com/user-attachments/assets/40e823ba-2348-4fd1-a90f-2b2b387c8bcd" />
+!<img width="214" height="233" alt="image" src="https://github.com/user-attachments/assets/ca7bf2ea-c82c-4de1-9774-aac305f4888f" />
+!<img width="259" height="266" alt="image" src="https://github.com/user-attachments/assets/341077f4-9658-4e8f-93ab-914b97e33d4e" />
+!<img width="242" height="237" alt="image" src="https://github.com/user-attachments/assets/51ef02a7-aa1f-4943-990a-793dbcf23f65" />
+!<img width="252" height="270" alt="image" src="https://github.com/user-attachments/assets/7a922937-e78d-406e-87a5-c1c7b50926ca" />
 
 ## Deployment and Containerization
 
@@ -221,4 +218,5 @@ The Catalog microservice and its persistence layer are containerized using Docke
 - **Catalog API Container**: Built using a multi-stage `Dockerfile` that separates the compilation phase from the runtime environment, minimizing image footprint and enhancing security.
 - **PostgreSQL Container**: Runs an isolated instance backed by a persistent Docker volume to guarantee that stored document data survives container restarts.
 
-!image.png
+!<img width="250" height="211" alt="image" src="https://github.com/user-attachments/assets/5486e66d-c6f0-487d-a9c8-80a9c323bce1" />
+
