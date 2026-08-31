@@ -2,3 +2,12 @@
 global using System.Net;
 global using System.Net.Http.Json;
 global using Xunit.Abstractions;
+global using Mapster;
+global using MediatR;
+global using Marten;
+global using Microsoft.AspNetCore.Http;
+global using Microsoft.AspNetCore.Http.HttpResults;
+global using Moq;
+global using Catalog.API.Exceptions;
+global using Catalog.API.Books.CreateBook;
+global using Catalog.API.Models;
