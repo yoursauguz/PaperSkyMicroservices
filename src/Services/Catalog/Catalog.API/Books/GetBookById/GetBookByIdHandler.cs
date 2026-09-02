@@ -2,12 +2,10 @@
 
 public record GetBookByIdQuery(Guid Id) : IQuery<GetBookByIdResult>;
 public record GetBookByIdResult(Book Book);
-public class GetBookByIdQueryHandler(IDocumentSession session, ILogger<GetBookByIdQueryHandler> logger) : IQueryHandler<GetBookByIdQuery, GetBookByIdResult>
+public class GetBookByIdQueryHandler(IDocumentSession session) : IQueryHandler<GetBookByIdQuery, GetBookByIdResult>
 {
     public async Task<GetBookByIdResult> Handle(GetBookByIdQuery query, CancellationToken cancellationToken)
     {
-        logger.LogInformation("GetBookByIdQueryHandler.Handle called with {@query}", query);
-
         var book = await session.LoadAsync<Book>(query.Id, cancellationToken);
 
         if (book == null)

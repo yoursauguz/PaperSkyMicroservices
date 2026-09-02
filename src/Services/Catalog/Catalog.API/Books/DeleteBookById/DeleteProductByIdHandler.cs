@@ -10,12 +10,10 @@ public class DeleteBookCommandValidator : AbstractValidator<DeleteBookByIdComman
     }
 }
 
-public class DeleteBookByIdCommandHandler(IDocumentSession session, ILogger<DeleteBookByIdCommandHandler> logger) : ICommandHandler<DeleteBookByIdCommand, DeleteBookByIdResult>
+public class DeleteBookByIdCommandHandler(IDocumentSession session) : ICommandHandler<DeleteBookByIdCommand, DeleteBookByIdResult>
 {
     public async Task<DeleteBookByIdResult> Handle(DeleteBookByIdCommand command, CancellationToken cancellationToken)
     {
-        logger.LogInformation("DeleteProductByIdCommandHandler.Handle called with {@command}", command);
-
         session.Delete<Book>(command.Id);
         await session.SaveChangesAsync(cancellationToken);
         return new DeleteBookByIdResult(true);

@@ -20,12 +20,10 @@ public class UpdateBookCommandValidator : AbstractValidator<UpdateBookCommand>
     }
 }
 
-public class UpdateBookCommandHandler(IDocumentSession session, ILogger<UpdateBookCommandHandler> logger) : ICommandHandler<UpdateBookCommand, UpdateBookResult>
+public class UpdateBookCommandHandler(IDocumentSession session) : ICommandHandler<UpdateBookCommand, UpdateBookResult>
 {
     public async Task<UpdateBookResult> Handle(UpdateBookCommand command, CancellationToken cancellationToken)
     {
-        logger.LogInformation("UpdateBookCommandHandler.Handle called with {@command}", command);
-
         var book = await session.LoadAsync<Book>(command.Id, cancellationToken);
 
         if (book is null)

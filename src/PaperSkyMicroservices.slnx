@@ -3,6 +3,9 @@
     <Project Path="Common/MicroserviceUtilities/MicroserviceUtilities.csproj" Id="162deb1b-b753-4c60-8bda-a60ca886f488" />
   </Folder>
   <Folder Name="/Services/" />
+  <Folder Name="/Services/Basket/">
+    <Project Path="Services/Basket/Basket.API/Basket.API.csproj" Id="e992f610-0e5a-4ef6-a75e-0fde4c4a84ac" />
+  </Folder>
   <Folder Name="/Services/Catalog/">
     <Project Path="Services/Catalog/Catalog.API.UnitTests/Catalog.API.UnitTests.csproj" Id="8fdefad6-19e1-4aab-b1ea-4f7e66ddf27a" />
     <Project Path="Services/Catalog/Catalog.API/Catalog.API.csproj" Id="71863c77-550a-46d6-a03f-cecba8529369" />

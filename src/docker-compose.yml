@@ -2,10 +2,27 @@ version: '3.8'
 
 services:
   catalog-database:
-    image: postgres:latest
-    restart: always
-    volumes:
-      - postgres_catalog:/var/lib/postgresql
+    image: postgres
+    
+  basket-database:
+    image: postgres
+
+  distributedcache:
+    image: redis
+  
+  catalog.api:
+    image: ${DOCKER_REGISTRY-}catalogapi
+    build:
+      context: .
+      dockerfile: Services/Catalog/Catalog.API/Dockerfile
+
+  basket.api:
+    image: ${DOCKER_REGISTRY-}basketapi
+    build:
+      context: .
+      dockerfile: Services/Basket/Basket.API/Dockerfile
 
 volumes:
   postgres_catalog:
+  postgres_basket:
+

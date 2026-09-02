@@ -20,12 +20,10 @@ public class CreateBookCommandValidator : AbstractValidator<CreateBookCommand>
     }
 }
 
-internal class CreateBookCommandHandler(IDocumentSession session, ILogger<CreateBookCommandHandler> logger) : ICommandHandler<CreateBookCommand, CreateBookResult>
+internal class CreateBookCommandHandler(IDocumentSession session) : ICommandHandler<CreateBookCommand, CreateBookResult>
 {
     public async Task<CreateBookResult> Handle(CreateBookCommand command, CancellationToken cancellationToken)
     {
-        logger.LogInformation("CreateBookCommandHandler.Handle called with {@command}", command);
-
         var book = new Book
         {
             Name = command.Name,

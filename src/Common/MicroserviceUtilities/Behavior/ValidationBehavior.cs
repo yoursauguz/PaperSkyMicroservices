@@ -1,8 +1,4 @@
-﻿using FluentValidation;
-using MediatR;
-using MicroserviceUtilities.CQRS;
-
-namespace MicroserviceUtilities.Behavior;
+﻿namespace MicroserviceUtilities.Behavior;
 
 public class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators) : IPipelineBehavior<TRequest, TResponse> where TRequest : ICommand<TResponse>
 {

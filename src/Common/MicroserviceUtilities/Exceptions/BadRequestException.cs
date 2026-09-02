@@ -1,5 +1,4 @@
-﻿
-namespace MicroserviceUtilities.Exceptions;
+﻿namespace MicroserviceUtilities.Exceptions;
 
 public class BadRequestException :Exception
 {

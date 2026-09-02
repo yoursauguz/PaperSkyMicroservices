@@ -8,3 +8,4 @@ global using Catalog.API.Exceptions;
 global using FluentValidation;
 global using MicroserviceUtilities.Behavior;
 global using MicroserviceUtilities.Exceptions.Handler;
+global using Catalog.API.Data;

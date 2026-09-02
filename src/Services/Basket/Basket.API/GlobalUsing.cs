@@ -1,0 +1,12 @@
+﻿global using Basket.API.Models;
+global using Carter;
+global using MediatR;
+global using Mapster;
+global using MicroserviceUtilities.CQRS;
+global using FluentValidation;
+global using MicroserviceUtilities.Behavior;
+global using MicroserviceUtilities.Exceptions.Handler;
+global using Marten;
+global using Basket.API.Exceptions;
+global using MicroserviceUtilities.Exceptions;
+global using Basket.API.Data;

@@ -1,6 +1,4 @@
-﻿using MediatR;
-
-namespace MicroserviceUtilities.CQRS;
+﻿namespace MicroserviceUtilities.CQRS;
 
 public interface ICommand : ICommand<Unit>
 {
