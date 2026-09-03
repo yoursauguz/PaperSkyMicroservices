@@ -212,5 +212,6 @@ The Catalog microservice and its persistence layer are containerized using Docke
 - **Catalog API Container**: Built using a multi-stage `Dockerfile` that separates the compilation phase from the runtime environment, minimizing image footprint and enhancing security.
 - **PostgreSQL Container**: Runs an isolated instance backed by a persistent Docker volume to guarantee that stored document data survives container restarts.
 
-<img width="180" height="180" alt="image" src="https://github.com/user-attachments/assets/5486e66d-c6f0-487d-a9c8-80a9c323bce1" />
+<img width="171" height="102" alt="image" src="https://github.com/user-attachments/assets/03249b26-12da-4ef1-bb76-e799364620c5" />
+
 
