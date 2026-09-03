@@ -1,3 +1,5 @@
+<img width="1024" height="640" alt="image" src="https://github.com/user-attachments/assets/1343db53-f074-4114-bed5-71684123829f" />
+
 # Domain Analysis
 
 ## Overview
