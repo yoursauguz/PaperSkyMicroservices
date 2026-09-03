@@ -102,7 +102,7 @@ public async Task<IEnumerable<Book>> GetBooksByGenreAsync(IDocumentSession sessi
 
 To maximize maintainability, scalability, and code clarity within each microservice, the application strictly follows **Vertical Slice Architecture**.
 
-<img width="720" height="508" alt="image" src="https://github.com/user-attachments/assets/242ae165-16b6-4d92-af66-22de6648fd73" />
+<img width="271" height="297" alt="image" src="https://github.com/user-attachments/assets/76a03d0e-ae7c-41f6-97d6-b30e1477225e" />
 
 ### Core Architecture Concepts
 
