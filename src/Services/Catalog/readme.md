@@ -201,11 +201,7 @@ It serializes the C# `Book` entities directly into PostgreSQL `JSONB` columns wh
 - **Expressive Validation Rules:** Enables the creation of strongly-typed, chainable validation logic for incoming commands and requests.
 - **Pipeline Integration:** Validates incoming payloads before execution reaches the core handlers, ensuring invalid data is rejected early with clear error responses.
 
-<img width="180" height="180" alt="image" src="https://github.com/user-attachments/assets/40e823ba-2348-4fd1-a90f-2b2b387c8bcd" />
-<img width="180" height="180" alt="image" src="https://github.com/user-attachments/assets/ca7bf2ea-c82c-4de1-9774-aac305f4888f" />
-<img width="180" height="180" alt="image" src="https://github.com/user-attachments/assets/341077f4-9658-4e8f-93ab-914b97e33d4e" />
-<img width="180" height="180" alt="image" src="https://github.com/user-attachments/assets/51ef02a7-aa1f-4943-990a-793dbcf23f65" />
-<img width="180" height="180" alt="image" src="https://github.com/user-attachments/assets/7a922937-e78d-406e-87a5-c1c7b50926ca" />
+<img width="421" height="100" alt="image" src="https://github.com/user-attachments/assets/05f27027-9837-4077-99fd-34bd951cfcf7" />
 
 ## Deployment and Containerization
 
