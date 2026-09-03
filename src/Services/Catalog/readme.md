@@ -90,11 +90,7 @@ public async Task<IEnumerable<Book>> GetBooksByGenreAsync(IDocumentSession sessi
         .ToListAsync();
 }
 ```
-
-<img width="180" height="180" alt="image" src="https://github.com/user-attachments/assets/07ba24fe-8424-435f-8652-8bdc49dbe416" />
-
-<img width="180" height="180" alt="image" src="https://github.com/user-attachments/assets/47852d7d-c786-4182-96a7-2bcc816fa767" />
-
+<img width="276" height="93" alt="image" src="https://github.com/user-attachments/assets/2fca9930-710a-41b5-a26b-24fbd94e5ccc" />
 
 # Technical Analysis
 
