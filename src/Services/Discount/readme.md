@@ -57,48 +57,6 @@ Discount microservice follows the Traditional **N-Layer** **Architecture**. this
 - **Abstraction & Loose Coupling:** Interfaces defined in lower layers allow upper layers to interact with logic without needing to know concrete implementation details.
 - **Reusability & Maintainability:** Replacing a database or UI framework only requires changes to the target layer, leaving the core domain and business logic untouched.
 
-### Example Folder Structure
-
-MySolution/
-│
-├── src/
-│   ├── MySolution.Web/                     # Presentation Layer (API / MVC)
-│   │   ├── Controllers/
-│   │   │   └── ProductsController.cs
-│   │   ├── Models/                         # Request / Response DTOs
-│   │   │   └── ProductRequestDto.cs
-│   │   ├── Program.cs                      # Dependency Injection & Pipeline Setup
-│   │   └── appsettings.json
-│   │
-│   ├── MySolution.Business/                # Business Logic Layer (BLL)
-│   │   ├── Services/
-│   │   │   ├── ProductService.cs
-│   │   │   └── Interfaces/
-│   │   │       └── IProductService.cs
-│   │   └── Validators/
-│   │       └── ProductValidator.cs
-│   │
-│   ├── MySolution.DataAccess/              # Data Access Layer (DAL)
-│   │   ├── Context/
-│   │   │   └── ApplicationDbContext.cs
-│   │   ├── Entities/                       # Database Tables Models
-│   │   │   └── ProductEntity.cs
-│   │   ├── Repositories/
-│   │   │   ├── ProductRepository.cs
-│   │   │   └── Interfaces/
-│   │   │       └── IProductRepository.cs
-│   │   └── Migrations/
-│   │
-│   └── MySolution.Core/                    # Common / Cross-Cutting Concerns
-│       ├── Exceptions/
-│       │   └── NotFoundException.cs
-│       ├── Helpers/
-│       └── Constants/
-│
-└── tests/
-├── MySolution.Business.Tests/
-└── MySolution.DataAccess.Tests/
-
 ## Patterns and Principles of Discount Microservice
 
 ### 1. gRPC ProtoBuf filed Endpoints
