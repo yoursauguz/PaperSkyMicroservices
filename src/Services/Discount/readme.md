@@ -1,222 +1,150 @@
+<img width="1024" height="640" alt="image" src="https://github.com/user-attachments/assets/72b3397d-15ff-459c-9655-c72a0c4df3b9" />
+
 # Domain Analysis
 
 ## Overview
 
-The **Catalog Service** is a core microservice responsible for managing the bookstore's inventory. It acts as the single source of truth for all book-related metadata, allowing users and other microservices to browse, search, and retrieve detailed product information.
+The Discount service is a grpc based microservice responsible for managing the discount coupons. It acts as the single source of truth for all the coupon-related metadata, allowing users and other microservices to add, remove, and retrieve coupon information for a product.
 
 ## Core Responsibilities
 
-- Maintain the master list of available books, genres, and pricing.
-- Expose RESTful endpoints for CRUD operations (Create, Read, Update, Delete) on book items.
-- Support efficient querying by ID, genre, or author to enhance the user shopping experience.
+- Maintain the master list of discount coupons for a product.
+- Expose grpc endpoints for CRUD operations (Create, Read, Update, Delete) on discount coupons.
 
-## Data Model: `Book` Entity
+## Data Model: `Coupon`Entity
 
-- **`Id`** (`Guid` / `string`): Unique identifier for the book.
-- **`Name`** (`string`): The title of the book.
-- **`Genres`** (`List<string>`): Listof categories/genres (e.g., `["Fiction", "Sci-Fi"]`).
-- **`Description`** (`string`): Detailed synopsis of the book.
-- **`Image`** (`string`): Cover image URL or asset path.
-- **`Price`** (`decimal`): Monetary price of the book.
-- **`NumberOfPages`** (`int`): Total page count.
-- **`Authors`** (`List<string>`): List of writers or creators.
-- **`AverageRating`** (`double`): Aggregate customer review score.
+- **`Id`** (`int`): Unique identifier for the coupon.
+- **`ProductName`** (`string`): The title of the product.
+- **`Description`** (`string`): Detailed information about the coupon.
+- **`Amount`** (`int`): Applicable discount amount.
 
-## Application Use Cases of Catalog Microservice
+## Application Use Cases of Discount Microservice
 
-- Listing books
-- Get Book by id
-- Get Books by genre
-- Get Books by author
-- Create new book
-- Update book
-- Delete book
+- Get discount coupon by product name
+- Create a discount coupon
+- Update a discount coupon
+- Delete a discount coupon
 
-## Rest API Endpoints of Catalog Microservice
+## Grpc Endpoints of Discount Microservice
 
-| **Operation**     | **HTTP Method** | **Route Pattern**                 | **Description**                                                     |
-| ----------------- | --------------- | --------------------------------- | ------------------------------------------------------------------- |
-| **Get All**       | `GET`           | `/api/v1/catalog`                 | Retrieves a paginated list of all books in the catalog.             |
-| **Get By ID**     | `GET`           | `/api/v1/catalog/{id}`            | Retrieves details for a specific book by its unique ID.             |
-| **Get By Genre**  | `GET`           | `/api/v1/catalog/genre/{genre}`   | Filters books matching a specific genre inside the `Genres` list.   |
-| **Get By Author** | `GET`           | `/api/v1/catalog/author/{author}` | Filters books matching a specific author inside the `Authors` list. |
-| **Add**           | `POST`          | `/api/v1/catalog`                 | Creates and saves a new book item to the inventory.                 |
-| **Edit**          | `PUT`           | `/api/v1/catalog/{id}`            | Updates details of an existing book item.                           |
-| **Delete**        | `DELETE`        | `/api/v1/catalog/{id}`            | Removes a book record from the catalog by its ID.                   |
+| **Operation** | **RPC** | **Description** |
+| --- | --- | --- |
+| **Get**  | `/GetDiscount` | Retrieves a discount coupon matching the product name. |
+| **Add** | `/CreateDiscount` | Creates and saves a new discount coupon |
+| **Edit** | `/UpdateDiscount` | Updates details of an existing discount coupon. |
+| **Delete** | `/DeleteDiscount` | Removes a discount coupon by the product name. |
 
 ## Data Storage & Persistence Strategy
 
-The **Catalog Service** uses **PostgreSQL** as its underlying database engine, powered by the **Marten** .NET library. Instead of mapping relational tables with a traditional ORM, Marten treats PostgreSQL as a full-fledged document database by storing .NET `Book` entities directly as JSON documents using PostgreSQL's `JSONB` capabilities.
+The **Discount Service** uses **SQLite** as its underlying database engine with a traditional ORM. It is chosen for its simplicity and efficiency for small-scale data like discount coupons. it is embedded within the application, reducing the need for additional infrastructure.
 
-### Why Marten + PostgreSQL?
-
-- **Developer Productivity**: Eliminates complex object-relational impedance matching; the C# `Book` model maps directly to the document store.
-- **ACID Compliance**: Inherits PostgreSQL's rock-solid transactional guarantees and strong consistency.
-- **Powerful Querying**: Supports full LINQ queries over JSON data structures, as well as native JavaScript/SQL querying when needed.
-
-### Sample Marten Setup for Catalog Service
-
-In the `Program.cs`, initializing Marten looks like this:
-
-C#
-
-```
-builder.Services.AddMarten(options =>
-{
-    options.Connection(builder.Configuration.GetConnectionString("Database")!);
-
-    // Configure Book document identity and indexes
-    options.Schema.For<Book>()
-        .Identity(x => x.Id)
-        .Index(x => x.Genres)
-        .Index(x => x.Authors);
-})
-.UseLightweightSessions();
-```
-
-### Querying with Marten (e.g., Get By Genre)
-
-Because `Genres` is stored as a string array (`string[]`) inside the JSON document, Marten makes array-contains queries seamless using standard LINQ:
-
-C#
-
-```
-public async Task<IEnumerable<Book>> GetBooksByGenreAsync(IDocumentSession session, string genre)
-{
-    return await session.Query<Book>()
-        .Where(b => b.Genres.Contains(genre))
-        .ToListAsync();
-}
-```
-
-<img width="180" height="180" alt="image" src="https://github.com/user-attachments/assets/07ba24fe-8424-435f-8652-8bdc49dbe416" />
-
-<img width="180" height="180" alt="image" src="https://github.com/user-attachments/assets/47852d7d-c786-4182-96a7-2bcc816fa767" />
-
+<img width="256" height="92" alt="image" src="https://github.com/user-attachments/assets/be27eb20-67f7-471e-af23-31d7867f248f" />
 
 # Technical Analysis
 
 ## Application Architecture Style
 
-To maximize maintainability, scalability, and code clarity within each microservice, the application strictly follows **Vertical Slice Architecture**.
+Discount microservice follows the Traditional **N-Layer** **Architecture**. this is a classic structural pattern designed to separate concerns across horizontal layers. Each layer has a distinct responsibility and strictly communicates with adjacent layers.
 
-<img width="720" height="508" alt="image" src="https://github.com/user-attachments/assets/242ae165-16b6-4d92-af66-22de6648fd73" />
+**Core Concepts**
+
+<img width="257" height="209" alt="image" src="https://github.com/user-attachments/assets/87eb2545-52f1-4530-a25b-dfdfd1748046" />
 
 ### Core Architecture Concepts
 
-- **Feature-Centric Organization**: Each feature (e.g., creating a book, getting books by author, updating book details) is packaged into its own completely isolated slice containing its request model, handler or endpoint logic, and validation rules.
-- **Minimized Coupling**: Because features are self-contained, changes or refactoring made to one specific feature (like altering the input payload for adding a book) will not accidentally impact or break unrelated features.
-- **TDD-Friendly Structure**: Vertical slices align exceptionally well with Test-Driven Development (TDD). You can build, test, and verify a single feature slice entirely in isolation before moving on to the next endpoint.
+- **Separation of Concerns:** Each layer handles a specific task-UI, business logic, or data acces-preventing logic from tangling together.
+- **Top-Down Dependency:** Dependencies flow downward in one direction
+- **Abstraction & Loose Coupling:** Interfaces defined in lower layers allow upper layers to interact with logic without needing to know concrete implementation details.
+- **Reusability & Maintainability:** Replacing a database or UI framework only requires changes to the target layer, leaving the core domain and business logic untouched.
 
-### Example Folder Structure (Catalog Service)
+### Example Folder Structure
 
-Plaintext
-
-```markdown
-Catalog.API/
+MySolution/
 │
-├── Features/
-│ ├── CreateBook/
-│ │ ├── CreateBookEndpoint.cs (FastEndpoints or Minimal API)
-│ │ ├── CreateBookHandler.cs (Business logic / command processing)
-│ │ └── CreateBookCommand.cs (Request contract & validation)
-│ │
-│ ├── GetBookById/
-│ │ ├── GetBookByIdEndpoint.cs
-│ │ └── GetBookByIdHandler.cs
-│ │
-│ ├── GetBooksByGenre/
-│ │ ├── GetBooksByGenreEndpoint.cs
-│ │ └── GetBooksByGenreHandler.cs
-│ │
-│ ├── GetBooksByAuthor/
-│ │ ├── GetBooksByAuthorEndpoint.cs
-│ │ └── GetBooksByAuthorHandler.cs
-│ │
-│ ├── UpdateBook/
-│ │ ├── UpdateBookEndpoint.cs
-│ │ └── UpdateBookHandler.cs
-│ │
-│ └── DeleteBook/
-│ ├── DeleteBookEndpoint.cs
-│ └── DeleteBookHandler.cs
+├── src/
+│   ├── MySolution.Web/                     # Presentation Layer (API / MVC)
+│   │   ├── Controllers/
+│   │   │   └── ProductsController.cs
+│   │   ├── Models/                         # Request / Response DTOs
+│   │   │   └── ProductRequestDto.cs
+│   │   ├── Program.cs                      # Dependency Injection & Pipeline Setup
+│   │   └── appsettings.json
+│   │
+│   ├── MySolution.Business/                # Business Logic Layer (BLL)
+│   │   ├── Services/
+│   │   │   ├── ProductService.cs
+│   │   │   └── Interfaces/
+│   │   │       └── IProductService.cs
+│   │   └── Validators/
+│   │       └── ProductValidator.cs
+│   │
+│   ├── MySolution.DataAccess/              # Data Access Layer (DAL)
+│   │   ├── Context/
+│   │   │   └── ApplicationDbContext.cs
+│   │   ├── Entities/                       # Database Tables Models
+│   │   │   └── ProductEntity.cs
+│   │   ├── Repositories/
+│   │   │   ├── ProductRepository.cs
+│   │   │   └── Interfaces/
+│   │   │       └── IProductRepository.cs
+│   │   └── Migrations/
+│   │
+│   └── MySolution.Core/                    # Common / Cross-Cutting Concerns
+│       ├── Exceptions/
+│       │   └── NotFoundException.cs
+│       ├── Helpers/
+│       └── Constants/
 │
-└── Program.cs
-```
+└── tests/
+├── MySolution.Business.Tests/
+└── MySolution.DataAccess.Tests/
 
-## Patterns and Principles of Catalog Microservices
+## Patterns and Principles of Discount Microservice
 
-Here is how these core patterns and principles fit together to power the cloud-based bookstore microservices, specifically tailored to the **Vertical Slice Architecture** and **Marten + PostgreSQL** stack:
+### 1. gRPC ProtoBuf filed Endpoints
 
-### 1. CQRS Pattern (Command Query Responsibility Segregation)
+In gRPC, API endpoints are defined inside **Protocol Buffer (`.proto`) schema files** by declaring a `service` block containing `rpc` (Remote Procedure Call) definitions.
 
-Separates ther application operations into two distinct types: **Commands** (which mutate state, like adding or updating a book) and **Queries** (which only read state, like getting books by genre or author).
+Unlike REST APIs that map endpoints to HTTP methods and paths (e.g., `GET /api/products`), gRPC routes requests directly to specific method names generated from the `.proto` file.
 
-### 2. Mediator Pattern
+### 2. Entity Framework Core
 
-Promotes loose coupling by introducing a mediator object (commonly implemented using the `MediatR` library in .NET) that encapsulates how objects interact.
+**Entity Framework Core (EF Core)** is an open-source, lightweight, cross-platform Object-Relational Mapper (ORM) for .NET. It allows developers to work with databases using strongly typed .NET objects, eliminating the need to write most raw SQL data-access code.
 
-Within each vertical slice, the Minimal API endpoint sends a command or query (e.g., `CreateBookCommand`) to the mediator, which routes it directly to the corresponding handler. This decouples the HTTP transport layer completely from the business logic.
+### 3. SQLite Database
 
-### 3. Dependency Injection (DI) in ASP.NET Core
+**SQLite** is an in-process, serverless, zero-configuration SQL database engine. Unlike PostgreSQL or SQL Server, SQLite does not run as a separate background daemon; instead, the entire database engine is compiled directly into your application as a lightweight library, storing all data (tables, indexes, and schema) inside a single cross-platform file on disk.
 
-ASP.NET Core’s built-in Inversion of Control (IoC) container manages the lifetime and creation of the application dependencies.
+## Essential NuGet Packages
 
-Uses DI to inject infrastructure components—such as Marten's `IDocumentSession` or feature handlers—directly into the Minimal API endpoints or command handlers, ensuring code is modular, testable, and loosely coupled.
+### 1. Microsoft.EntityFrameworkCore.Sqlite
 
-### 4. Minimal APIs & Routing in ASP.NET Core
+- **Purpose:** The official EF Core database provider for SQLite.
+- **Role:** Translates LINQ queries into SQLite-compatible SQL, configures relational table mapping, handles database connections via `Microsoft.Data.Sqlite`, and enables `UseSqlite()` in `Program.cs`.
 
-A lightweight, high-performance alternative to traditional MVC controllers for building fast HTTP endpoints with minimal boilerplate.
+### 2. Microsoft.EntityFrameworkCore.Tools
 
-Minimal APIs fit **Vertical Slice Architecture** perfectly. Instead of grouping all routing logic into a massive `CatalogController`, each feature slice defines its own route extension (e.g., `MapCreateBookEndpoint`), keeping endpoints close to their handlers.
+- **Purpose:** Design-time tooling for Entity Framework Core.
+- **Role:** Enables CLI and PowerShell commands (e.g., `Add-Migration`, `Update-Database`, or `dotnet ef migrations add`) to auto-generate schema migration files and apply database updates directly from Visual Studio or the command line.
 
-### 5. ORM / Document Store Pattern (Marten)
+### 3. Aspnetcore.Grpc
 
-A pattern for mapping domain models to database structures. Rather than a traditional relational ORM (like EF Core mapping tables), Marten acts as a document database abstraction over PostgreSQL.
-
-It serializes the C# `Book` entities directly into PostgreSQL `JSONB` columns while providing powerful LINQ querying capabilities (making array checks on `Genres` and `Authors` seamless).
-
-## Essential NuGet Packages for Vertical Slice Architecture
-
-### 1. MediatR
-
-- **Mediator Pattern Implementation:** Decouples message senders from message receivers by routing commands and queries to their respective handlers.
-- **Slice Isolation:** Encapsulates business logic within individual vertical slice handlers, keeping application endpoints clean and focused solely on transport concerns.
-
-### 2. Carter
-
-- **Minimal API Enhancement:** Built on top of ASP.NET Core Minimal APIs to organize route definitions into modular, feature-based classes.
-- **Boilerplate Reduction:** Eliminates repetitive route mapping configuration by automatically discovering and registering route endpoints across feature folders.
-
-### 3. Marten
-
-- **PostgreSQL Document Database:** Leverages PostgreSQL native `JSONB` capabilities to store .NET entities directly as documents without complex relational ORM mapping.
-- **Advanced Querying:** Provides robust LINQ support over document structures, making array-based queries (such as filtering by genres or authors) efficient and seamless.
+- **`Grpc.AspNetCore`** is Microsoft’s official framework package for hosting high-performance **gRPC services inside ASP.NET Core** applications.
+- It integrates gRPC into the ASP.NET Core middleware ecosystem, giving you built-in routing, dependency injection, logging, authentication, and authorization for gRPC endpoints over HTTP/2.
 
 ### 4. Mapster
 
 - **High-Performance Object Mapping:** Copies data between different layers, such as mapping incoming request models to commands or converting domain entities into response DTOs.
 - **Speed and Simplicity:** Offers fast execution and convention-based mapping configurations with minimal setup overhead.
 
-### 5. FluentValidation
-
-- **Expressive Validation Rules:** Enables the creation of strongly-typed, chainable validation logic for incoming commands and requests.
-- **Pipeline Integration:** Validates incoming payloads before execution reaches the core handlers, ensuring invalid data is rejected early with clear error responses.
-
-<img width="180" height="180" alt="image" src="https://github.com/user-attachments/assets/40e823ba-2348-4fd1-a90f-2b2b387c8bcd" />
-<img width="180" height="180" alt="image" src="https://github.com/user-attachments/assets/ca7bf2ea-c82c-4de1-9774-aac305f4888f" />
-<img width="180" height="180" alt="image" src="https://github.com/user-attachments/assets/341077f4-9658-4e8f-93ab-914b97e33d4e" />
-<img width="180" height="180" alt="image" src="https://github.com/user-attachments/assets/51ef02a7-aa1f-4943-990a-793dbcf23f65" />
-<img width="180" height="180" alt="image" src="https://github.com/user-attachments/assets/7a922937-e78d-406e-87a5-c1c7b50926ca" />
+<img width="595" height="101" alt="image" src="https://github.com/user-attachments/assets/ecb00007-7684-434b-a2bf-0c43dde37c52" />
 
 ## Deployment and Containerization
 
-The Catalog microservice and its persistence layer are containerized using Docker and orchestrated via Docker Compose to ensure environment consistency across development and deployment pipelines.
+The Discount microservice and its persistence layer are containerized using Docker and orchestrated via Docker Compose to ensure environment consistency across development and deployment pipelines.
 
 ### Container Architecture
 
-- **Catalog API Container**: Built using a multi-stage `Dockerfile` that separates the compilation phase from the runtime environment, minimizing image footprint and enhancing security.
-- **PostgreSQL Container**: Runs an isolated instance backed by a persistent Docker volume to guarantee that stored document data survives container restarts.
+- **Discount Grpc Container**: Built using a multi-stage `Dockerfile` that separates the compilation phase from the runtime environment, minimizing image footprint and enhancing security.
 
-<img width="180" height="180" alt="image" src="https://github.com/user-attachments/assets/5486e66d-c6f0-487d-a9c8-80a9c323bce1" />
-
+<img width="214" height="137" alt="image" src="https://github.com/user-attachments/assets/8e9d264c-e6dc-4c4c-99d3-162811c23444" />
