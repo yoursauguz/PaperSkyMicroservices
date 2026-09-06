@@ -26,12 +26,24 @@ services:
       - postgres_basket:/var/lib/postgresql
   
   distributedcache:
-    container_name: distributedcache
+    container_name: redis-distributed-cache
     restart: always
     ports:
       - "6379:6379"
 
+  order-database:
+    container_name: order-database
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Sa@123456789  
+    restart: always
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql_order:/var/lib/mssql
+  
   catalog.api:
+    container_name: catalog-api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
@@ -47,15 +59,18 @@ services:
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
 
   basket.api:
+    container_name: basket-api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
       - ConnectionStrings__Database=Server=basket-database;Port=5432;Database=BasketDb;User Id=postgres;Password=postgres;Include Error Detail=true
       - ConnectionStrings__Redis=distributedcache:6379
+      - GrpcSettings__DiscountUrl=http://discount.grpc:8080
     depends_on:
       - basket-database
       - distributedcache
+      - discount.grpc
     ports:
       - "6001:8080"
       - "6061:8081"
@@ -64,6 +79,7 @@ services:
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
 
   discount.grpc:
+    container_name: discount-grpc
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080

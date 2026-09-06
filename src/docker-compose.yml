@@ -1,5 +1,7 @@
 version: '3.8'
 
+name: papersky-microservices
+
 services:
   catalog-database:
     image: postgres
@@ -9,6 +11,9 @@ services:
 
   distributedcache:
     image: redis
+
+  order-database:
+    image: mcr.microsoft.com/mssql/server
   
   catalog.api:
     image: ${DOCKER_REGISTRY-}catalogapi
@@ -32,5 +37,6 @@ volumes:
   postgres_catalog:
   postgres_basket:
   sqlite_data:
+  mssql_order:
 
 
