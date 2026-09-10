@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/Common/">
+    <Project Path="../MicroserviceMessaging/MicroserviceMessaging.csproj" Id="21492a50-949e-486d-a69a-10b9e91b1fb7" />
     <Project Path="Common/MicroserviceUtilities/MicroserviceUtilities.csproj" Id="162deb1b-b753-4c60-8bda-a60ca886f488" />
   </Folder>
   <Folder Name="/Services/" />

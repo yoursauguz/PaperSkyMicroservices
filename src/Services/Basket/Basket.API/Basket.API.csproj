@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\MicroserviceMessaging\MicroserviceMessaging.csproj" />
     <ProjectReference Include="..\..\..\Common\MicroserviceUtilities\MicroserviceUtilities.csproj" />
   </ItemGroup>
 

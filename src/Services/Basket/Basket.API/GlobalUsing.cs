@@ -10,3 +10,4 @@ global using Marten;
 global using Basket.API.Exceptions;
 global using MicroserviceUtilities.Exceptions;
 global using Basket.API.Data;
+global using Basket.API.Basket.Dtos;
